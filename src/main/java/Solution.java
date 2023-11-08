@@ -38,7 +38,7 @@ public class Solution {
                 if (wordsToGroupsNumbers.size() == i)
                     wordsToGroupsNumbers.add(new HashMap<>());
 
-                if (word.equals("\"\"")) {
+                if (word.equals("\"\"") || word.equals("")) {
                     continue;
                 }
 
@@ -66,6 +66,16 @@ public class Solution {
 
             for (PositionWord newWord : positionWords) {
                 wordsToGroupsNumbers.get(newWord.position).put(newWord.value, groupNumber);
+            }
+
+            for (int mergeGroupNumber : foundInGroups)
+            {
+                if (mergeGroupNumber != groupNumber)
+                {
+                    mergedGroupNumberToFinalGroupNumber.put(mergeGroupNumber, groupNumber);
+                    linesGroups.get(groupNumber).addAll(linesGroups.get(mergeGroupNumber));
+                    linesGroups.set(mergeGroupNumber, null);
+                }
             }
 
             linesGroups.get(groupNumber).add(line);

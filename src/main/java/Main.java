@@ -1,9 +1,9 @@
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 
 public class Main {
@@ -29,12 +29,15 @@ public class Main {
             }
             abc.close();
             List<Set<String>> result = Solution.splittingIntoGroups(lines);
+
+            System.out.println(lines.size());
+            System.out.println(result.size());
+
             AtomicInteger numGroup = new AtomicInteger(1);
 
-            for (int i = result.stream().mapToInt(Set::size).max().getAsInt(); i >= 1; i--) {
-                int maxVal = i;
 
-                result.stream().filter(strings -> strings.size() == maxVal).collect(Collectors.toSet()).forEach(s -> {
+            Collections.sort(result, new SizeComparator());
+            result.forEach(s -> {
                     System.out.println("_________________________________________________________________________________________________________________________________________________________");
                     System.out.println("Group " + numGroup.getAndIncrement());
                     for (String s1 : s) {
@@ -43,7 +46,7 @@ public class Main {
                     System.out.println("_________________________________________________________________________________________________________________________________________________________");
                     System.out.println();
                 });
-            }
+
             long endTime = System.currentTimeMillis();
 
             System.out.println("Program running time is " + (endTime - startTime) + " milliseconds");
@@ -54,5 +57,12 @@ public class Main {
             throw new RuntimeException(e);
         }
 
+    }
+    static class SizeComparator implements Comparator<Set<?>> {
+
+        @Override
+        public int compare(Set<?> o1, Set<?> o2) {
+            return Integer.valueOf(o2.size()).compareTo(o1.size());
+        }
     }
 }
