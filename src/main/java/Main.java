@@ -1,41 +1,25 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
         try {
             long startTime = System.currentTimeMillis();
-            String fileName = args[0];
 
-            File fileTemp = new File("");
-            String pathProject = fileTemp.getAbsolutePath();
-            String path = "/src/main/resources/";
+            String pathToFile = args[0];
+            File file = new File(pathToFile);
+            List<Set<String>> result = Solution.splittingIntoGroups(file);
 
-
-            File file = new File(pathProject + path + fileName);
-            BufferedReader abc = new BufferedReader(new FileReader(file));
-            List<String> lines = new ArrayList<>();
-
-            String line;
-
-            while ((line = abc.readLine()) != null) {
-                lines.add(line);
-            }
-            abc.close();
-            List<Set<String>> result = Solution.splittingIntoGroups(lines);
-
-            System.out.println(lines.size());
-            System.out.println(result.size());
+            long endTimeWithoutGroup = System.currentTimeMillis();
 
             AtomicInteger numGroup = new AtomicInteger(1);
-
-
             Collections.sort(result, new SizeComparator());
             result.forEach(s -> {
                     System.out.println("_________________________________________________________________________________________________________________________________________________________");
@@ -49,8 +33,8 @@ public class Main {
 
             long endTime = System.currentTimeMillis();
 
-            System.out.println("Program running time is " + (endTime - startTime) + " milliseconds");
-            System.out.println("Or about " + (endTime - startTime)/1000 + " seconds");
+            System.out.println("The execution time of the program WITHOUT the output of groups is " + (endTimeWithoutGroup - startTime) + " milliseconds or about " + (endTimeWithoutGroup - startTime) / 1000 + " seconds");
+            System.out.println("Program running time is " + (endTime - startTime) + " milliseconds or about " + (endTime - startTime) / 1000 + " seconds");
             System.out.println("Groups with more than one element: " + result.stream().filter(s -> s.size() >= 2).count());
             System.out.println();
         } catch (IOException e) {
@@ -58,6 +42,7 @@ public class Main {
         }
 
     }
+
     static class SizeComparator implements Comparator<Set<?>> {
 
         @Override
