@@ -14,8 +14,14 @@ public class Main {
             long startTime = System.currentTimeMillis();
 
             String pathToFile = args[0];
-            File file = new File(pathToFile);
-            List<Set<String>> result = Solution.splittingIntoGroups(file);
+
+
+            File file = new File("");
+
+            File file1 = new File(file.getAbsolutePath() + "/" + pathToFile);
+            List<Set<String>> result = Solution.splittingIntoGroups(file1);
+
+
 
             long endTimeWithoutGroup = System.currentTimeMillis();
 
