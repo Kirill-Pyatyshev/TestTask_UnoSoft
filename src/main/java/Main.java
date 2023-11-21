@@ -1,5 +1,7 @@
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,28 +23,8 @@ public class Main {
             File file1 = new File(file.getAbsolutePath() + "/" + pathToFile);
             List<Set<String>> result = Solution.splittingIntoGroups(file1);
 
+            outputToFile(result, startTime);
 
-
-            long endTimeWithoutGroup = System.currentTimeMillis();
-
-            AtomicInteger numGroup = new AtomicInteger(1);
-            Collections.sort(result, new SizeComparator());
-            result.forEach(s -> {
-                    System.out.println("_________________________________________________________________________________________________________________________________________________________");
-                    System.out.println("Group " + numGroup.getAndIncrement());
-                    for (String s1 : s) {
-                        System.out.println(s1);
-                    }
-                    System.out.println("_________________________________________________________________________________________________________________________________________________________");
-                    System.out.println();
-                });
-
-            long endTime = System.currentTimeMillis();
-
-            System.out.println("The execution time of the program WITHOUT the output of groups is " + (endTimeWithoutGroup - startTime) + " milliseconds or about " + (endTimeWithoutGroup - startTime) / 1000 + " seconds");
-            System.out.println("Program running time is " + (endTime - startTime) + " milliseconds or about " + (endTime - startTime) / 1000 + " seconds");
-            System.out.println("Groups with more than one element: " + result.stream().filter(s -> s.size() >= 2).count());
-            System.out.println();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -55,5 +37,33 @@ public class Main {
         public int compare(Set<?> o1, Set<?> o2) {
             return Integer.valueOf(o2.size()).compareTo(o1.size());
         }
+    }
+
+    static void outputToFile(List<Set<String>> result, long startTime) throws IOException {
+
+        File resultFile = new File("result.txt");
+        resultFile.createNewFile();
+
+        FileWriter fileWriter = new FileWriter(resultFile);
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+
+        AtomicInteger numGroup = new AtomicInteger(1);
+        Collections.sort(result, new SizeComparator());
+        result.forEach(s -> {
+            printWriter.println("_________________________________________________________________________________________________________________________________________________________");
+            printWriter.println("Group " + numGroup.getAndIncrement());
+            for (String s1 : s) {
+                printWriter.println(s1);
+            }
+            printWriter.println("_________________________________________________________________________________________________________________________________________________________");
+            printWriter.println();
+        });
+
+        long endTime = System.currentTimeMillis();
+
+        printWriter.println("Program running time is " + (endTime - startTime) + " milliseconds or about " + (endTime - startTime) / 1000 + " seconds");
+        printWriter.println("Groups with more than one element: " + result.stream().filter(s -> s.size() >= 2).count());
+        printWriter.println();
+        printWriter.close();
     }
 }
